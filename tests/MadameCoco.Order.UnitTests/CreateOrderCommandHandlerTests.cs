@@ -51,6 +51,6 @@ public class CreateOrderCommandHandlerTests
         _mockRepository.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
 
         // Verify MassTransit publish
-        _mockPublishEndpoint.Verify(x => x.Publish(It.IsAny<IOrderCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mockPublishEndpoint.Verify(x => x.Publish<IOrderCreatedEvent>(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }
