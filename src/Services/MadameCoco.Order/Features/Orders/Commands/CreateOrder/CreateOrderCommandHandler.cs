@@ -11,7 +11,7 @@ using MediatR;
 
 namespace MadameCoco.Order.Features.Orders.Commands.CreateOrder;
 
-public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Response<Guid>>
+public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, MadameCoco.Shared.Response<Guid>>
 {
     private readonly OrderDbContext _context;
     private readonly IPublishEndpoint _publishEndpoint;
@@ -22,7 +22,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
         _publishEndpoint = publishEndpoint;
     }
 
-    public async Task<Response<Guid>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<MadameCoco.Shared.Response<Guid>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         var order = new Entities.Order
         {
@@ -50,6 +50,6 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
             ShippingAddress = order.ShippingAddress
         }, cancellationToken);
 
-        return Response<Guid>.Success(order.Id, 201);
+        return MadameCoco.Shared.Response<Guid>.Success(order.Id, 201);
     }
 }

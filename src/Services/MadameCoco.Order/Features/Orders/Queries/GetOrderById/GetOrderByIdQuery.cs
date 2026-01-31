@@ -1,10 +1,11 @@
 using System;
 using MadameCoco.Shared;
+using MadameCoco.Shared.Contracts;
 using MediatR;
 
 namespace MadameCoco.Order.Features.Orders.Queries.GetOrderById;
 
-public record GetOrderByIdQuery(Guid Id) : IRequest<Response<OrderDto>>;
+public record GetOrderByIdQuery(Guid Id) : IRequest<MadameCoco.Shared.Response<OrderDto>>;
 
 public class OrderDto
 {
