@@ -7,6 +7,8 @@ services:
       POSTGRES_PASSWORD: 1234
     ports:
       - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   mongo:
     image: mongo
@@ -62,7 +64,7 @@ services:
       context: .
       dockerfile: src/Gateways/MadameCoco.Gateway/Dockerfile
     ports:
-      - "5000:8080"
+      - "5050:8080"
     depends_on:
       - customer-service
       - order-service
