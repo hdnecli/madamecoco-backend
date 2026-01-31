@@ -9,6 +9,11 @@ services:
       - "5432:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   mongo:
     image: mongo
@@ -23,19 +28,27 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   customer-service:
     image: customer-service
+    restart: on-failure
     build:
       context: .
       dockerfile: src/Services/MadameCoco.Customer/Dockerfile
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=MadameCocoCustomerDb;Username=postgres;Password=1234
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   order-service:
     image: order-service
+    restart: on-failure
     build:
       context: .
       dockerfile: src/Services/MadameCoco.Order/Dockerfile
@@ -43,11 +56,14 @@ services:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=MadameCocoOrderDb;Username=postgres;Password=1234
       - RabbitMq__Host=rabbitmq
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   audit-service:
     image: audit-service
+    restart: on-failure
     build:
       context: .
       dockerfile: src/Services/MadameCoco.Audit/Dockerfile
@@ -55,11 +71,14 @@ services:
       - MongoDB__ConnectionString=mongodb://admin:1234@mongo:27017
       - RabbitMq__Host=rabbitmq
     depends_on:
-      - mongo
-      - rabbitmq
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
   gateway-service:
     image: gateway-service
+    restart: on-failure
     build:
       context: .
       dockerfile: src/Gateways/MadameCoco.Gateway/Dockerfile
