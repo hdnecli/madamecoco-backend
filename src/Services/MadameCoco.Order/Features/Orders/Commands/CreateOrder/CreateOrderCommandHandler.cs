@@ -13,12 +13,12 @@ namespace MadameCoco.Order.Features.Orders.Commands.CreateOrder;
 
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, MadameCoco.Shared.Response<Guid>>
 {
-    private readonly OrderDbContext _context;
+    private readonly Repositories.IOrderRepository _repository;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public CreateOrderCommandHandler(OrderDbContext context, IPublishEndpoint publishEndpoint)
+    public CreateOrderCommandHandler(Repositories.IOrderRepository repository, IPublishEndpoint publishEndpoint)
     {
-        _context = context;
+        _repository = repository;
         _publishEndpoint = publishEndpoint;
     }
 
@@ -38,8 +38,8 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Mad
             }).ToList()
         };
 
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync(cancellationToken);
+        _repository.Add(order);
+        await _repository.SaveChangesAsync(cancellationToken);
 
         // Publish Event
         await _publishEndpoint.Publish<IOrderCreatedEvent>(new
