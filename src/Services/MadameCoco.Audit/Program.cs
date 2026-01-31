@@ -3,6 +3,11 @@ using MadameCoco.Audit.Jobs;
 using MadameCoco.Audit.Services;
 using MassTransit;
 using Quartz;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+
+BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
 var builder = Host.CreateApplicationBuilder(args);
 
