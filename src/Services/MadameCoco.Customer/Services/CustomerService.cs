@@ -60,4 +60,29 @@ public class CustomerService : ICustomerService
         await _context.SaveChangesAsync();
         return Response<bool>.Success(true, 204);
     }
+
+    public async Task<Response<bool>> ValidateAsync(Guid id)
+    {
+        var exists = await _context.Customers.AnyAsync(c => c.Id == id);
+        return Response<bool>.Success(exists, 200);
+    }
+
+    public async Task<Response<Entities.Customer>> UpdateAsync(Guid id, CreateCustomerDto customerDto)
+    {
+        var customer = await _context.Customers.FindAsync(id);
+        if (customer == null)
+        {
+            return Response<Entities.Customer>.Fail("Customer not found", 404);
+        }
+
+        customer.Name = customerDto.Name;
+        customer.Email = customerDto.Email;
+        customer.Address = customerDto.Address;
+        customer.UpdatedAt = DateTime.UtcNow;
+
+        _context.Customers.Update(customer);
+        await _context.SaveChangesAsync();
+
+        return Response<Entities.Customer>.Success(customer, 200);
+    }
 }

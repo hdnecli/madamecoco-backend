@@ -8,6 +8,6 @@ namespace MadameCoco.Order.Features.Orders.Commands.CreateOrder;
 
 public record CreateOrderCommand(
     Guid CustomerId,
-    Address ShippingAddress,
+    Address Address,
     List<OrderItemDto> Items
 ) : IRequest<MadameCoco.Shared.Response<Guid>>;

@@ -18,6 +18,16 @@ public class OrderRepository : IOrderRepository
         _context.Orders.Add(order);
     }
 
+    public async Task<Entities.Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Orders.FindAsync(new object[] { id }, cancellationToken);
+    }
+
+    public async Task AddAsync(Entities.Order order, CancellationToken cancellationToken = default)
+    {
+        await _context.Orders.AddAsync(order, cancellationToken);
+    }
+
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         await _context.SaveChangesAsync(cancellationToken);

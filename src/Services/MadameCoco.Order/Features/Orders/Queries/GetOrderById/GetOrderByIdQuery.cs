@@ -13,7 +13,7 @@ public class OrderDto
     public Guid CustomerId { get; set; }
     public string Status { get; set; } = default!;
     public DateTime CreatedAt { get; set; }
-    public AddressDto ShippingAddress { get; set; } = default!;
+    public AddressDto Address { get; set; } = default!;
     public List<OrderItemDto> Items { get; set; } = new();
 }
 

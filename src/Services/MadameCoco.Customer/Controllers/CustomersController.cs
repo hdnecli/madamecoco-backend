@@ -63,4 +63,31 @@ public class CustomersController : ControllerBase
         }
         return Ok(result);
     }
+
+    [HttpGet("{id}/validate")]
+    public async Task<IActionResult> Validate(Guid id)
+    {
+        var result = await _customerService.ValidateAsync(id);
+        return Ok(result.Data); // Returning bool directly as per requirements or wrapped in Response? Requirement says "Validate(uuid): bool". 
+                                // To strictly watch signature "bool", we return the data. But API usually returns JSON. 
+                                // If strict diagram means return type of method, then Service returns bool. 
+                                // API returning boolean JSON is standard.
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid id, CreateCustomerDto createCustomerDto)
+    {
+        var validationResult = await _validator.ValidateAsync(createCustomerDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(Response<string>.Fail(validationResult.ToString(), 400));
+        }
+
+        var result = await _customerService.UpdateAsync(id, createCustomerDto);
+        if (!result.IsSuccess)
+        {
+            return StatusCode(result.StatusCode, result);
+        }
+        return Ok(result);
+    }
 }

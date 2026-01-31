@@ -32,10 +32,18 @@ public class CreateOrderCommandHandlerTests
         // Arrange
         var command = new CreateOrderCommand(
             CustomerId: Guid.NewGuid(),
-            ShippingAddress: new Address { AddressLine = "Test St", City = "Test City", Country = "Test Country", CityCode = 1 },
+            Address: new Address { AddressLine = "Test St", City = "Test City", Country = "Test Country", CityCode = 1 },
             Items: new List<OrderItemDto>
             {
-                new OrderItemDto { ProductId = Guid.NewGuid(), Quantity = 1, UnitPrice = 100 }
+                new OrderItemDto 
+                { 
+                    ProductId = Guid.NewGuid(), 
+                    Quantity = 1, 
+                    UnitPrice = 100, 
+                    ProductName = "Test Product",
+                    ImageUrl = "http://test.com/img.jpg",
+                    Status = "Active"
+                }
             }
         );
 
@@ -47,7 +55,7 @@ public class CreateOrderCommandHandlerTests
         Assert.NotEqual(Guid.Empty, result.Data);
 
         // Verify Repository calls
-        _mockRepository.Verify(x => x.Add(It.IsAny<Entities.Order>()), Times.Once);
+        _mockRepository.Verify(x => x.AddAsync(It.IsAny<Entities.Order>(), It.IsAny<CancellationToken>()), Times.Once);
         _mockRepository.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
 
         // Verify MassTransit publish

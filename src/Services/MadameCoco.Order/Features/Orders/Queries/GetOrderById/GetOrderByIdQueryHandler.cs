@@ -26,11 +26,11 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, Respo
     {
         using IDbConnection connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
         
-        var sql = @"
+            var sql = @"
             SELECT 
                 o.""Id"", o.""CustomerId"", o.""Status"", o.""CreatedAt"",
-                o.""ShippingAddressLine"" as AddressLine, o.""ShippingCity"" as City, o.""ShippingCountry"" as Country, o.""ShippingCityCode"" as CityCode,
-                i.""Id"", i.""ProductId"", i.""ProductName"", i.""UnitPrice"", i.""Quantity""
+                o.""AddressLine"", o.""City"", o.""Country"", o.""CityCode"",
+                i.""Id"", i.""ProductId"", i.""ProductName"", i.""ImageUrl"", i.""Status"", i.""UnitPrice"", i.""Quantity""
             FROM ""Orders"" o
             LEFT JOIN ""OrderItems"" i ON o.""Id"" = i.""OrderId""
             WHERE o.""Id"" = @Id";
@@ -44,7 +44,7 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, Respo
                 if (!orderDictionary.TryGetValue(order.Id, out var currentOrder))
                 {
                     currentOrder = order;
-                    currentOrder.ShippingAddress = address;
+                    currentOrder.Address = address;
                     currentOrder.Items = new List<OrderItemDto>();
                     orderDictionary.Add(currentOrder.Id, currentOrder);
                 }

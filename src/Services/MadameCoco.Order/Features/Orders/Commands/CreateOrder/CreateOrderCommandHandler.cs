@@ -27,28 +27,32 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Mad
         var order = new Entities.Order
         {
             CustomerId = request.CustomerId,
-            ShippingAddress = request.ShippingAddress,
+            Address = request.Address,
             Status = "Created",
             Items = request.Items.Select(i => new OrderItem
             {
                 ProductId = i.ProductId,
-                ProductName = "Product Name Placeholder", // Ideally fetched from Product Service or passed in DTO
+                ProductName = i.ProductName,
+                ImageUrl = i.ImageUrl,
+                Status = i.Status,
                 UnitPrice = i.UnitPrice,
                 Quantity = i.Quantity
             }).ToList()
         };
 
-        _repository.Add(order);
+        await _repository.AddAsync(order, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
 
         // Publish Event
-        await _publishEndpoint.Publish<IOrderCreatedEvent>(new
+        var orderCreatedEvent = new
         {
             OrderId = order.Id,
             CustomerId = order.CustomerId,
-            Items = request.Items,
-            ShippingAddress = order.ShippingAddress
-        }, cancellationToken);
+            ShippingAddress = order.Address, // Event contract likely still uses ShippingAddress name? Let's check IOrderCreatedEvent.
+            Items = request.Items
+        };
+
+        await _publishEndpoint.Publish<IOrderCreatedEvent>(orderCreatedEvent, cancellationToken);
 
         return MadameCoco.Shared.Response<Guid>.Success(order.Id, 201);
     }

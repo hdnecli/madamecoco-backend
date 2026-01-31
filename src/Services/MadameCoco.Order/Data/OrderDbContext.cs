@@ -20,12 +20,12 @@ public class OrderDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Status).IsRequired();
-            entity.OwnsOne(e => e.ShippingAddress, address =>
+            entity.OwnsOne(e => e.Address, address =>
             {
-                address.Property(a => a.AddressLine).HasColumnName("ShippingAddressLine").IsRequired();
-                address.Property(a => a.City).HasColumnName("ShippingCity").IsRequired();
-                address.Property(a => a.Country).HasColumnName("ShippingCountry").IsRequired();
-                address.Property(a => a.CityCode).HasColumnName("ShippingCityCode").IsRequired();
+                address.Property(a => a.AddressLine).HasColumnName("AddressLine").IsRequired();
+                address.Property(a => a.City).HasColumnName("City").IsRequired();
+                address.Property(a => a.Country).HasColumnName("Country").IsRequired();
+                address.Property(a => a.CityCode).HasColumnName("CityCode").IsRequired();
             });
 
             entity.HasMany(e => e.Items)

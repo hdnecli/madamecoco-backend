@@ -3,6 +3,7 @@ using MadameCoco.Shared.Middlewares;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,9 @@ builder.Services.AddScoped<MadameCoco.Order.Repositories.IOrderRepository, Madam
 
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+// FluentValidation
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 // MassTransit
 builder.Services.AddMassTransit(x =>

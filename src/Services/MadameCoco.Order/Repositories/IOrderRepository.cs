@@ -5,6 +5,7 @@ namespace MadameCoco.Order.Repositories;
 
 public interface IOrderRepository
 {
-    void Add(Entities.Order order);
-    Task SaveChangesAsync(CancellationToken cancellationToken);
+    Task<Entities.Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task AddAsync(Entities.Order order, CancellationToken cancellationToken = default);
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }
