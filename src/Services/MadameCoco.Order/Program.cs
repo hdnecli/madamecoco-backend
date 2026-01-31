@@ -21,9 +21,19 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 // MassTransit
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumers(Assembly.GetExecutingAssembly()); 
+
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(builder.Configuration["RabbitMq:Host"]);
+        var rabbitHost = builder.Configuration["RabbitMq:Host"] ?? "localhost";
+        
+        cfg.Host(rabbitHost, "/", h => 
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ConfigureEndpoints(context); 
     });
 });
 
