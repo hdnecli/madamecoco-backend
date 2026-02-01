@@ -8,15 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MadameCoco.Customer.Services;
 
+/// <summary>
+/// Implements the customer business logic.
+/// </summary>
 public class CustomerService : ICustomerService
 {
     private readonly CustomerDbContext _context;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CustomerService"/> class.
+    /// </summary>
+    /// <param name="context">The customer database context.</param>
     public CustomerService(CustomerDbContext context)
     {
         _context = context;
     }
 
+    /// <inheritdoc />
     public async Task<Response<Entities.Customer>> CreateAsync(CreateCustomerDto customerDto)
     {
         var customer = new Entities.Customer
@@ -32,6 +40,7 @@ public class CustomerService : ICustomerService
         return Response<Entities.Customer>.Success(customer, 201);
     }
 
+    /// <inheritdoc />
     public async Task<Response<Entities.Customer>> GetByIdAsync(Guid id)
     {
         var customer = await _context.Customers.FindAsync(id);
@@ -42,12 +51,14 @@ public class CustomerService : ICustomerService
         return Response<Entities.Customer>.Success(customer, 200);
     }
 
+    /// <inheritdoc />
     public async Task<Response<List<Entities.Customer>>> GetAllAsync()
     {
         var customers = await _context.Customers.ToListAsync();
         return Response<List<Entities.Customer>>.Success(customers, 200);
     }
 
+    /// <inheritdoc />
     public async Task<Response<bool>> DeleteAsync(Guid id)
     {
         var customer = await _context.Customers.FindAsync(id);
@@ -61,12 +72,14 @@ public class CustomerService : ICustomerService
         return Response<bool>.Success(true, 204);
     }
 
+    /// <inheritdoc />
     public async Task<Response<bool>> ValidateAsync(Guid id)
     {
         var exists = await _context.Customers.AnyAsync(c => c.Id == id);
         return Response<bool>.Success(exists, 200);
     }
 
+    /// <inheritdoc />
     public async Task<Response<Entities.Customer>> UpdateAsync(Guid id, CreateCustomerDto customerDto)
     {
         var customer = await _context.Customers.FindAsync(id);
