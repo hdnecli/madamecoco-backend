@@ -19,8 +19,20 @@ I deployed an **Ocelot API Gateway** to function as the single entry point for a
 ### Event-Driven Communication
 To maintain decoupling between services, I implemented an Event-Driven Architecture using **RabbitMQ** (via MassTransit). When an order is placed, an event is published asynchronously. This design ensures that the Order Service remains highly responsive and is not blocked by downstream processes like auditing.
 
+### Order Snapshot Strategy
+When an order is created, I capture a snapshot of the product details (Name, Price, ImageUrl) at that specific moment. This ensures that historical order data remains accurate even if the product catalog changes in the future.
+
 ### Audit Service
 I built the Audit Service as a background worker that consumes integration events and persists audit logs to **MongoDB**. I selected MongoDB for its flexibility in handling unstructured data, which is ideal for evolving log schemas.
+
+## Technologies Used
+*   **Framework:** .NET 8.0
+*   **Message Broker:** RabbitMQ (MassTransit)
+*   **Databases:** PostgreSQL (Relational), MongoDB (NoSQL)
+*   **API Gateway:** Ocelot
+*   **ORM:** Entity Framework Core (Write), Dapper (Read)
+*   **Validation:** FluentValidation
+*   **Containerization:** Docker & Docker Compose
 
 ## Prerequisites
 *   **Docker Desktop**: Required to run the containerized environment.
