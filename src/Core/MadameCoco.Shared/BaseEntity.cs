@@ -1,5 +1,3 @@
-using System;
-
 namespace MadameCoco.Shared;
 
 public abstract class BaseEntity
