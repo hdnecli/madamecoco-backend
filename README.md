@@ -1,7 +1,7 @@
-# MadameCoco Backend Challenge
+# MadameCoco Backend Case
 
 ## Introduction
-I designed and implemented this Microservices Backend Solution for the MadameCoco challenge. My primary goal was to create a scalable, maintainable system using strict clean architecture principles. I structured the solution to ensure loosely coupled services that can evolve independently, utilizing industry-standard patterns like CQRS and Event-Driven Architecture.
+I designed and implemented this Microservices Backend Solution for the MadameCoco case. My primary goal was to create a scalable, maintainable system using strict clean architecture principles. I structured the solution to ensure loosely coupled services that can evolve independently, utilizing industry-standard patterns like CQRS and Event-Driven Architecture.
 
 ## Architecture and Design Decisions
 
@@ -80,6 +80,8 @@ curl -X POST http://localhost:5050/api/customers \
 ### 2. Create an Order
 **Endpoint:** `POST /api/orders`
 
+You can use the customer id from the first request's response.
+
 ```bash
 curl -X POST http://localhost:5050/api/orders \
    -H "Content-Type: application/json" \
@@ -106,6 +108,8 @@ curl -X POST http://localhost:5050/api/orders \
 
 ### 3. Change Order Status
 **Endpoint:** `PATCH /api/orders/{id}/status`
+
+You can use the order id from the second request's response.
 
 ```bash
 curl -X PATCH http://localhost:5050/api/orders/3fa85f64-5717-4562-b3fc-2c963f66afa6/status \
